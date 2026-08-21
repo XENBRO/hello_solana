@@ -13,6 +13,18 @@ declare_id!("HsFWY9X4VUW5gi1eGwtcUjZ136eTNK2h49RnZKhTPXSV");
 
 #[program]
 pub mod hello_solana {
+
+pub fn create_lock(
+    ctx: Context<CreateLock>,
+    lock_duration_seconds: i64,
+) -> Result<()> {
+    crate::instructions::create_lock::handle_create_lock(
+        ctx,
+        lock_duration_seconds,
+    )
+}
+
+
     use super::*;
 
     pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
