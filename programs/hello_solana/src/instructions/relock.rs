@@ -1,3 +1,8 @@
+use crate::reward_math::{
+    multiplier_for_lock_duration,
+};
+
+
 use anchor_lang::prelude::*;
 
 use crate::error::ErrorCode;
@@ -25,10 +30,13 @@ pub fn handle_relock(
         ErrorCode::PositionStillLocked
     );
 
-    require!(
-        lock_duration_seconds > 0,
-        ErrorCode::InvalidLockDuration
-    );
+    
+require!(
+    multiplier_for_lock_duration(lock_duration_seconds).is_some(),
+    ErrorCode::InvalidLockTier
+);
+
+
 
     let clock = Clock::get()?;
 

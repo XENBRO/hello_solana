@@ -1,3 +1,10 @@
+
+use crate::reward_math::{
+    calculate_blood_reward,
+    multiplier_for_lock_duration,
+    SECONDS_PER_DAY,
+};
+
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Token, TokenAccount, Transfer};
 
@@ -104,19 +111,24 @@ require!(
 // BLOOD reward v2:
 // 1% BLOOD per DRC for each FULL day locked.
 
-const SECONDS_PER_DAY: u64 = 60;
-const BLOOD_RATE_BPS_PER_DAY: u64 = 100; // 1%
-const BPS_DENOMINATOR: u64 = 10_000;
+let multiplier_bps =
+    multiplier_for_lock_duration(lock_duration)
+        .ok_or(ErrorCode::InvalidLockTier)?;
 
 let full_days = (lock_duration as u64)
-    .checked_div(SECONDS_PER_DAY)
+    .checked_div(SECONDS_PER_DAY as u64)
     .ok_or(ErrorCode::RewardCalculationOverflow)?;
 
-let blood_reward = amount
-    .checked_mul(full_days)
-    .and_then(|v| v.checked_mul(BLOOD_RATE_BPS_PER_DAY))
-    .and_then(|v| v.checked_div(BPS_DENOMINATOR))
-    .ok_or(ErrorCode::RewardCalculationOverflow)?;
+let blood_reward = calculate_blood_reward(
+    amount,
+    full_days,
+    multiplier_bps,
+)
+.ok_or(ErrorCode::RewardCalculationOverflow)?;
+
+
+
+
 
 
 
