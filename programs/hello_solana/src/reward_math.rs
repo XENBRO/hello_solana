@@ -1,5 +1,7 @@
-pub const BLOOD_RATE_BPS_PER_DAY: u64 = 100;
-pub const BPS_DENOMINATOR: u64 = 10_000;
+pub const BLOOD_RATE_PER_DAY: u64 = 250;
+pub const RATE_DENOMINATOR: u64 = 1_000_000;
+
+pub const BPS_DENOMINATOR: i64 = 10_000;
 
 pub const SECONDS_PER_DAY: i64 = 86_400;
 
@@ -27,9 +29,9 @@ pub fn calculate_blood_reward(
 ) -> Option<u64> {
     let reward = (amount as u128)
         .checked_mul(full_days as u128)?
-        .checked_mul(BLOOD_RATE_BPS_PER_DAY as u128)?
+        .checked_mul(BLOOD_RATE_PER_DAY as u128)?
         .checked_mul(multiplier_bps as u128)?
-        .checked_div(BPS_DENOMINATOR as u128)?
+        .checked_div(RATE_DENOMINATOR as u128)?
         .checked_div(BPS_DENOMINATOR as u128)?;
 
     u64::try_from(reward).ok()
@@ -37,24 +39,71 @@ pub fn calculate_blood_reward(
 
 #[cfg(test)]
 mod tests {
-    use super::*;
 
-    const ONE_DRC: u64 = 1_000_000_000;
+use super::*;
 
-    #[test]
-    fn reward_30_days() {
-        let reward =
-            calculate_blood_reward(100 * ONE_DRC, 30, 10_000).unwrap();
+const ONE_DRC: u64 = 1_000_000_000;
 
-        assert_eq!(reward, 30 * ONE_DRC);
+#[test]
+fn reward_curve_matches_expected_tokenomics() {
+    const ONE_TOKEN: u64 = 1_000_000_000;
+
+    let cases = [
+        // DRC amount, days, multiplier, expected BLOOD raw units
+        (10u64, 30u64, 10_000u64, 75_000_000u64),
+        (10, 90, 12_500, 281_250_000),
+        (10, 180, 15_000, 675_000_000),
+        (10, 365, 20_000, 1_825_000_000),
+
+        (100, 30, 10_000, 750_000_000),
+        (100, 90, 12_500, 2_812_500_000),
+        (100, 180, 15_000, 6_750_000_000),
+        (100, 365, 20_000, 18_250_000_000),
+
+        (1_000, 30, 10_000, 7_500_000_000),
+        (1_000, 90, 12_500, 28_125_000_000),
+        (1_000, 180, 15_000, 67_500_000_000),
+        (1_000, 365, 20_000, 182_500_000_000),
+
+        (10_000, 30, 10_000, 75_000_000_000),
+        (10_000, 90, 12_500, 281_250_000_000),
+        (10_000, 180, 15_000, 675_000_000_000),
+        (10_000, 365, 20_000, 1_825_000_000_000),
+    ];
+
+    for (drc, days, multiplier, expected_raw) in cases {
+        let reward = calculate_blood_reward(
+            drc * ONE_TOKEN,
+            days,
+            multiplier,
+        )
+        .unwrap();
+
+        assert_eq!(
+            reward,
+            expected_raw,
+            "Unexpected reward for {} DRC / {} days",
+            drc,
+            days
+        );
     }
+}
+
+
+#[test]
+fn reward_30_days() {
+    let reward =
+        calculate_blood_reward(100 * ONE_DRC, 30, 10_000).unwrap();
+
+    assert_eq!(reward, 750_000_000);
+}
 
     #[test]
     fn reward_90_days() {
         let reward =
             calculate_blood_reward(100 * ONE_DRC, 90, 12_500).unwrap();
 
-        assert_eq!(reward, 112_500_000_000);
+        assert_eq!(reward, 2_812_500_000);
     }
 
     #[test]
@@ -62,7 +111,7 @@ mod tests {
         let reward =
             calculate_blood_reward(100 * ONE_DRC, 180, 15_000).unwrap();
 
-        assert_eq!(reward, 270 * ONE_DRC);
+        assert_eq!(reward, 6_750_000_000);
     }
 
     #[test]
@@ -70,7 +119,7 @@ mod tests {
         let reward =
             calculate_blood_reward(100 * ONE_DRC, 365, 20_000).unwrap();
 
-        assert_eq!(reward, 730 * ONE_DRC);
+        assert_eq!(reward, 18_250_000_000);
     }
 
     #[test]
