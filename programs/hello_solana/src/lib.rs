@@ -24,6 +24,17 @@ pub fn withdraw(
         amount,
     )
 }
+pub fn preview_blood_reward(
+    ctx: Context<PreviewBloodReward>,
+    amount: u64,
+    lock_duration_seconds: i64,
+) -> Result<()> {
+    instructions::preview_blood_reward::handle_preview_blood_reward(
+        ctx,
+        amount,
+        lock_duration_seconds,
+    )
+}
 
 pub fn reconcile_lock(
     ctx: Context<ReconcileLock>,
