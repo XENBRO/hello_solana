@@ -10,7 +10,7 @@ use anchor_spl::token::{self, Token, TokenAccount, Transfer};
 
 use crate::error::ErrorCode;
 use crate::state::LockPosition;
-
+use crate::constants::DRC_MINT;
 #[derive(Accounts)]
 pub struct Withdraw<'info> {
     #[account(
@@ -26,6 +26,7 @@ pub struct Withdraw<'info> {
         seeds = [b"vault", owner.key().as_ref()],
         bump,
         constraint = vault.owner == lock_position.key(),
+        constraint = vault.mint == DRC_MINT,
     )]
     pub vault: Account<'info, TokenAccount>,
 

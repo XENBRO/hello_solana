@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{Mint, Token, TokenAccount};
-
+use crate::constants::DRC_MINT;
 use crate::state::LockPosition;
 
 #[derive(Accounts)]
@@ -22,7 +22,8 @@ pub struct CreateVault<'info> {
     )]
     pub vault: Account<'info, TokenAccount>,
 
-    pub drc_mint: Account<'info, Mint>,
+    #[account(address = DRC_MINT)]
+pub drc_mint: Account<'info, Mint>,
 
     #[account(mut)]
     pub owner: Signer<'info>,

@@ -1,8 +1,9 @@
 use crate::error::ErrorCode;
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Token, TokenAccount, Transfer};
-
+use crate::constants::DRC_MINT;
 use crate::state::LockPosition;
+use crate::reward_math::multiplier_for_lock_duration;
 
 #[derive(Accounts)]
 pub struct Deposit<'info> {
@@ -19,6 +20,7 @@ pub struct Deposit<'info> {
         seeds = [b"vault", owner.key().as_ref()],
         bump,
         constraint = vault.owner == lock_position.key(),
+        constraint = vault.mint == DRC_MINT,
     )]
     pub vault: Account<'info, TokenAccount>,
 
@@ -26,6 +28,7 @@ pub struct Deposit<'info> {
         mut,
         constraint = owner_token_account.owner == owner.key(),
         constraint = owner_token_account.mint == vault.mint,
+        
     )]
     pub owner_token_account: Account<'info, TokenAccount>,
 
@@ -77,9 +80,10 @@ let lock_duration = ctx
     .checked_sub(ctx.accounts.lock_position.lock_start)
     .ok_or(ErrorCode::RewardCalculationOverflow)?;
 
+
 require!(
-    lock_duration > 0,
-    ErrorCode::InvalidLockDuration
+    multiplier_for_lock_duration(lock_duration).is_some(),
+    ErrorCode::InvalidLockTier
 );
 
 ctx.accounts.lock_position.lock_start = clock.unix_timestamp;
