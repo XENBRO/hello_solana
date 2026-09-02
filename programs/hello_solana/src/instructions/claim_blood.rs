@@ -3,7 +3,7 @@ use anchor_spl::token::{self, Mint, MintTo, Token, TokenAccount};
 
 use crate::error::ErrorCode;
 use crate::state::LockPosition;
-
+use crate::constants::BLOOD_MINT;
 #[derive(Accounts)]
 pub struct ClaimBlood<'info> {
     #[account(
@@ -15,10 +15,10 @@ pub struct ClaimBlood<'info> {
     pub lock_position: Account<'info, LockPosition>,
 
     #[account(
-        mut,
-        address = pubkey!("7VTckSLG46j9A294aiJHKWW5QXxrKaxQj1zwe96J69SF"),
-    )]
-    pub blood_mint: Account<'info, Mint>,
+    mut,
+    address = BLOOD_MINT,
+)]
+pub blood_mint: Account<'info, Mint>,
 
     /// CHECK: PDA used only as mint authority signer
     #[account(

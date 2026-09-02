@@ -35,8 +35,7 @@ PositionAlreadyFunded,
 #[msg("This lock cycle has already expired; relock before depositing")]
 LockAlreadyExpired,
 
-#[msg("Cannot reconcile while the DRC vault still contains tokens")]
-VaultNotEmpty,
+
 
 #[msg("Lock duration must be 30, 90, 180, or 365 days")]
 InvalidLockTier,

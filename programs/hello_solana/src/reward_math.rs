@@ -1,7 +1,7 @@
 pub const BLOOD_RATE_PER_DAY: u64 = 250;
 pub const RATE_DENOMINATOR: u64 = 1_000_000;
 
-pub const BPS_DENOMINATOR: i64 = 10_000;
+pub const BPS_DENOMINATOR: u64 = 10_000;
 
 pub const SECONDS_PER_DAY: i64 = 86_400;
 

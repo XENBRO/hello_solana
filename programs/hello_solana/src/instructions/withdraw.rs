@@ -90,12 +90,8 @@ let cpi_ctx = CpiContext::new_with_signer(
 
     token::transfer(cpi_ctx, amount)?;
 
-// BLOOD reward v1:
-// 1 BLOOD per 1 DRC for each full day locked.
-//
-// All calculations use token base units.
-// Since DRC and BLOOD will both use 9 decimals,
-// 1 DRC base unit rewards 1 BLOOD base unit per full day.
+// Calculate BLOOD reward using the canonical lock tier
+// and shared production reward math.
 
 let lock_duration = ctx
     .accounts
@@ -109,8 +105,6 @@ require!(
     ErrorCode::InvalidLockDuration
 );
 
-// BLOOD reward v2:
-// 1% BLOOD per DRC for each FULL day locked.
 
 let multiplier_bps =
     multiplier_for_lock_duration(lock_duration)
