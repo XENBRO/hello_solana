@@ -1,5 +1,9 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{Mint, Token, TokenAccount};
+use anchor_spl::token_interface::{
+    Mint,
+    TokenAccount,
+    TokenInterface,
+};
 use crate::constants::DRC_MINT;
 use crate::state::LockPosition;
 
@@ -19,16 +23,17 @@ pub struct CreateVault<'info> {
         bump,
         token::mint = drc_mint,
         token::authority = lock_position,
+        token::token_program = token_program,
     )]
-    pub vault: Account<'info, TokenAccount>,
+    pub vault: InterfaceAccount<'info, TokenAccount>,
 
     #[account(address = DRC_MINT)]
-pub drc_mint: Account<'info, Mint>,
+    pub drc_mint: InterfaceAccount<'info, Mint>,
 
     #[account(mut)]
     pub owner: Signer<'info>,
 
-    pub token_program: Program<'info, Token>,
+    pub token_program: Interface<'info, TokenInterface>,
     pub system_program: Program<'info, System>,
 }
 
