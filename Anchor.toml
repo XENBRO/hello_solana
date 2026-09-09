@@ -10,7 +10,7 @@ skip-lint = false
 hello_solana = "BvCp3TifDEunawh1frrYsPPkT2jCAoKU9bMFQY2GLH8g"
 
 [provider]
-cluster = "devnet"
+cluster = "https://rpc.mainnet.x1.xyz"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
