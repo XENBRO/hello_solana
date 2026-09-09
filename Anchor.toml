@@ -7,7 +7,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-hello_solana = "HsFWY9X4VUW5gi1eGwtcUjZ136eTNK2h49RnZKhTPXSV"
+hello_solana = "BvCp3TifDEunawh1frrYsPPkT2jCAoKU9bMFQY2GLH8g"
 
 [provider]
 cluster = "devnet"
