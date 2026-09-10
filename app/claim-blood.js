@@ -9,7 +9,7 @@ const {
 
 async function main() {
   const connection = new Connection(
-    "https://api.devnet.solana.com",
+    "https://rpc.mainnet.x1.xyz",
     "confirmed"
   );
 
@@ -46,7 +46,7 @@ async function main() {
   const owner = payer.publicKey;
 
   const bloodMint = new PublicKey(
-    "7VTckSLG46j9A294aiJHKWW5QXxrKaxQj1zwe96J69SF"
+    "WYQdHQWeLvXSr1L8d65BdnomKM68tKxSgLM6ifAFo94"
   );
 
   const TOKEN_PROGRAM_ID = new PublicKey(

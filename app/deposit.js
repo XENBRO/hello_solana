@@ -9,7 +9,7 @@ const {
 
 async function main() {
   const connection = new Connection(
-    "https://api.devnet.solana.com",
+    "https://rpc.mainnet.x1.xyz",
     "confirmed"
   );
 
@@ -46,11 +46,11 @@ async function main() {
   const owner = payer.publicKey;
 
   const drcMint = new PublicKey(
-    "AZok25SLqhV9QNXiS6fUgdBtMzQZkqmQPGF46akX61iS"
+    "GPPQhRmYzt1op59JAtNvsh1VdaueF8iXR5wjXH8xvTFG"
   );
 
   const TOKEN_PROGRAM_ID = new PublicKey(
-    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
   );
 
   const [lockPosition] =
@@ -110,9 +110,9 @@ async function main() {
   );
 
   // Mint has 9 decimals.
-  // 10 test DRC = 10 * 10^9 base units.
+  // 1 DRC = 1 * 10^9 base units.
   const amount =
-    new anchor.BN("10000000000");
+    new anchor.BN("1000000000");
 
   const tx = await program.methods
     .deposit(amount)
@@ -120,6 +120,7 @@ async function main() {
       lockPosition,
       vault,
       ownerTokenAccount,
+      drcMint,
       owner,
       tokenProgram: TOKEN_PROGRAM_ID,
     })
@@ -155,7 +156,7 @@ async function main() {
     lock.amount.toString()
   );
 
-  console.log("SUCCESS: 10 test DRC deposited.");
+  console.log("SUCCESS: 1 DRC deposited.");
 }
 
 main().catch((err) => {

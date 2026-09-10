@@ -8,7 +8,7 @@ const {
 
 async function main() {
   const connection = new Connection(
-    "https://api.devnet.solana.com",
+    "https://rpc.mainnet.x1.xyz",
     "confirmed"
   );
 
@@ -25,7 +25,7 @@ async function main() {
 
   const idl = JSON.parse(
     fs.readFileSync(
-      "../target/idl/hello_solana.json",
+      "target/idl/hello_solana.json",
       "utf8"
     )
   );

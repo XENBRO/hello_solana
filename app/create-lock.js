@@ -8,7 +8,7 @@ const {
 
 async function main() {
   const connection = new Connection(
-    "https://api.devnet.solana.com",
+    "https://rpc.mainnet.x1.xyz",
     "confirmed"
   );
 
@@ -56,8 +56,8 @@ async function main() {
   console.log("Lock owner:", phantomOwner.toBase58());
   console.log("Lock PDA:", lockPosition.toBase58());
 
-  // 60-second Devnet test lock
-  const lockDurationSeconds = new anchor.BN(60);
+  // 30-day X1 mainnet lock
+  const lockDurationSeconds = new anchor.BN(2592000);
 
   const tx = await program.methods
     .createLock(lockDurationSeconds)

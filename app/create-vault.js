@@ -10,7 +10,7 @@ const {
 
 async function main() {
   const connection = new Connection(
-    "https://api.devnet.solana.com",
+    "https://rpc.mainnet.x1.xyz",
     "confirmed"
   );
 
@@ -47,11 +47,11 @@ async function main() {
   const owner = payer.publicKey;
 
   const drcMint = new PublicKey(
-    "AZok25SLqhV9QNXiS6fUgdBtMzQZkqmQPGF46akX61iS"
+    "GPPQhRmYzt1op59JAtNvsh1VdaueF8iXR5wjXH8xvTFG"
   );
 
   const TOKEN_PROGRAM_ID = new PublicKey(
-    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
   );
 
   const [lockPosition] =

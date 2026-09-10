@@ -8,7 +8,7 @@ const {
 
 async function main() {
   const connection = new Connection(
-    "https://api.devnet.solana.com",
+    "https://rpc.mainnet.x1.xyz",
     "confirmed"
   );
 
@@ -53,8 +53,8 @@ async function main() {
       program.programId
     );
 
-  // 60-second test lock
-  const duration = new anchor.BN(60);
+  // 30-day X1 mainnet lock
+  const duration = new anchor.BN(2592000);
 
   console.log("Owner:", owner.toBase58());
   console.log("Lock PDA:", lockPosition.toBase58());
@@ -83,7 +83,7 @@ async function main() {
   console.log("Lock start:", after.lockStart.toString());
   console.log("Unlock time:", after.unlockTime.toString());
 
-  console.log("SUCCESS: lock restarted for 60 seconds.");
+  console.log("SUCCESS: lock restarted for 30 days.");
 }
 
 main().catch((err) => {

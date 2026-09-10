@@ -7,19 +7,23 @@ const {
   PublicKey,
 } = require("@solana/web3.js");
 
-const TOKEN_PROGRAM_ID = new PublicKey(
+const DRC_TOKEN_PROGRAM_ID = new PublicKey(
+  "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+);
+
+const BLOOD_TOKEN_PROGRAM_ID = new PublicKey(
   "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
 );
 
 // BLOOD mint
 const BLOOD_MINT = new PublicKey(
-  "7VTckSLG46j9A294aiJHKWW5QXxrKaxQj1zwe96J69SF"
+  "WYQdHQWeLvXSr1L8d65BdnomKM68tKxSgLM6ifAFo94"
 );
 
-const LOCK_SECONDS = 60;
+const LOCK_SECONDS = 2592000;
 
-// 10 tokens with 9 decimals
-const TEST_AMOUNT = new anchor.BN("10000000000");
+// 1 DRC with 9 decimals
+const TEST_AMOUNT = new anchor.BN("1000000000");
 
 const sleep = (ms) =>
   new Promise((resolve) => setTimeout(resolve, ms));
@@ -32,7 +36,7 @@ async function main() {
   // --------------------------------------------------
 
   const connection = new Connection(
-    "https://api.devnet.solana.com",
+    "https://rpc.mainnet.x1.xyz",
     "confirmed"
   );
 
@@ -217,7 +221,7 @@ async function main() {
   // 2. DEPOSIT
   // --------------------------------------------------
 
-  console.log("\n[2/6] Depositing 10 DRC...");
+  console.log("\n[2/6] Depositing 1 DRC...");
 
   const depositTx = await program.methods
     .deposit(TEST_AMOUNT)
@@ -225,8 +229,9 @@ async function main() {
       lockPosition,
       vault,
       ownerTokenAccount,
+      drcMint,
       owner,
-      tokenProgram: TOKEN_PROGRAM_ID,
+      tokenProgram: DRC_TOKEN_PROGRAM_ID,
     })
     .rpc();
 
@@ -270,7 +275,7 @@ async function main() {
   // 4. WITHDRAW
   // --------------------------------------------------
 
-  console.log("\n[4/6] Withdrawing 10 DRC...");
+  console.log("\n[4/6] Withdrawing 1 DRC...");
 
   const withdrawTx = await program.methods
     .withdraw(TEST_AMOUNT)
@@ -278,8 +283,9 @@ async function main() {
       lockPosition,
       vault,
       ownerTokenAccount,
+      drcMint,
       owner,
-      tokenProgram: TOKEN_PROGRAM_ID,
+      tokenProgram: DRC_TOKEN_PROGRAM_ID,
     })
     .rpc();
 
@@ -315,7 +321,7 @@ async function main() {
       bloodMintAuthority,
       ownerBloodAccount,
       owner,
-      tokenProgram: TOKEN_PROGRAM_ID,
+      tokenProgram: BLOOD_TOKEN_PROGRAM_ID,
     })
     .rpc();
 
