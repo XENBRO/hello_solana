@@ -36,6 +36,21 @@ const lockTier = document.getElementById("lockTier");
 
 const depositAmountEl = document.getElementById("depositAmount");
 
+const bloodBalanceEl = document.getElementById("bloodBalance");
+const lockedAmountEl = document.getElementById("lockedAmount");
+const unlockDateEl = document.getElementById("unlockDate");
+const claimableBloodEl = document.getElementById("claimableBlood");
+const withdrawButton = document.getElementById("withdrawButton");
+const claimButton = document.getElementById("claimButton");
+
+const BLOOD_MINT = new PublicKey(
+  "WYQdHQWeLvXSr1L8d65BdnomKM68tKxSgLM6ifAFo94"
+);
+
+const TOKEN_PROGRAM_ID = new PublicKey(
+  "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+);
+
 let walletProvider = null;
 let walletPublicKey = null;
 let lockPositionPda = null;
@@ -165,6 +180,35 @@ async function loadDrcBalance() {
   return formatted;
 }
 
+async function loadBloodBalance() {
+  bloodBalanceEl.textContent = "Loading...";
+
+  const accounts =
+    await connection.getParsedTokenAccountsByOwner(
+      walletPublicKey,
+      {
+        mint: BLOOD_MINT,
+      }
+    );
+
+  let totalRaw = 0n;
+
+  for (const account of accounts.value) {
+    const tokenAmount =
+      account.account.data.parsed.info.tokenAmount;
+
+    totalRaw += BigInt(tokenAmount.amount);
+  }
+
+  const formatted =
+    formatTokenAmount(totalRaw, 9);
+
+  bloodBalanceEl.textContent =
+    `${formatted} BLOOD`;
+
+  return formatted;
+}
+
 async function loadLockPosition() {
   lockPositionPda =
     deriveLockPosition(walletPublicKey);
@@ -208,16 +252,67 @@ async function loadLockPosition() {
     };
   }
 
+  const lock =
+  await program.account.lockPosition.fetch(
+    lockPositionPda
+  );
+
+const amountRaw = BigInt(lock.amount.toString());
+const bloodRaw = BigInt(lock.bloodEarned.toString());
+
+const lockedDrc =
+  formatTokenAmount(amountRaw, 9);
+
+const claimableBlood =
+  formatTokenAmount(bloodRaw, 9);
+
+const unlockTimestamp =
+  Number(lock.unlockTime.toString());
+
+const unlockDate =
+  new Date(unlockTimestamp * 1000);
+
+lockedAmountEl.textContent =
+  `${lockedDrc} DRC`;
+
+unlockDateEl.textContent =
+  unlockDate.toLocaleString();
+
+claimableBloodEl.textContent =
+  `${claimableBlood} BLOOD`;
+
+if (amountRaw > 0n) {
+  lockStatusEl.textContent = "Locked";
+  lockButton.textContent = "Position Funded";
+  lockButton.disabled = true;
+
+  const now = Math.floor(Date.now() / 1000);
+
+  withdrawButton.disabled =
+    now < unlockTimestamp;
+
+  claimButton.disabled =
+    bloodRaw === 0n;
+} else {
   lockStatusEl.textContent = "Ready to deposit";
   lockButton.textContent = "Deposit DRC";
   lockButton.disabled = false;
 
-  return {
-    lockExists: true,
-    vaultExists: true,
-    lockAddress: lockPositionPda.toBase58(),
-    vaultAddress: vaultPda.toBase58(),
-  };
+  withdrawButton.disabled = true;
+  claimButton.disabled = true;
+}
+
+return {
+  lockExists: true,
+  vaultExists: true,
+  funded: amountRaw > 0n,
+  amountRaw,
+  bloodRaw,
+  unlockTimestamp,
+  lockAddress: lockPositionPda.toBase58(),
+  vaultAddress: vaultPda.toBase58(),
+};
+
 }
 
 async function connectWallet() {
@@ -253,6 +348,8 @@ async function connectWallet() {
     const drcBalance =
       await loadDrcBalance();
 
+    const bloodBalance =
+  await loadBloodBalance();
     const lock =
       await loadLockPosition();
 
@@ -435,6 +532,190 @@ async function depositDrc() {
   }
 }
 
+async function withdrawDrc() {
+  try {
+    if (
+      !walletPublicKey ||
+      !program ||
+      !lockPositionPda ||
+      !vaultPda
+    ) {
+      throw new Error("Connect your wallet first.");
+    }
+
+    const lock =
+      await program.account.lockPosition.fetch(
+        lockPositionPda
+      );
+
+    const amountRaw =
+      BigInt(lock.amount.toString());
+
+    const unlockTimestamp =
+      Number(lock.unlockTime.toString());
+
+    const now =
+      Math.floor(Date.now() / 1000);
+
+    if (amountRaw <= 0n) {
+      throw new Error("No locked DRC to withdraw.");
+    }
+
+    if (now < unlockTimestamp) {
+      throw new Error(
+        "This position is still locked."
+      );
+    }
+
+    const tokenAccounts =
+      await connection.getTokenAccountsByOwner(
+        walletPublicKey,
+        { mint: DRC_MINT }
+      );
+
+    if (tokenAccounts.value.length === 0) {
+      throw new Error(
+        "No DRC token account found for this wallet."
+      );
+    }
+
+    const ownerTokenAccount =
+      tokenAccounts.value[0].pubkey;
+
+    withdrawButton.disabled = true;
+
+    const displayAmount =
+      formatTokenAmount(amountRaw, 9);
+
+    setStatus(
+      `Withdrawing ${displayAmount} DRC...\n\n` +
+      `Approve the transaction in X1 Wallet.`
+    );
+
+    const tx = await program.methods
+      .withdraw(
+        new anchor.BN(amountRaw.toString())
+      )
+      .accounts({
+        lockPosition: lockPositionPda,
+        vault: vaultPda,
+        ownerTokenAccount,
+        drcMint: DRC_MINT,
+        owner: walletPublicKey,
+        tokenProgram: TOKEN_2022_PROGRAM_ID,
+      })
+      .rpc();
+
+    setStatus(
+      `DRC withdrawn successfully.\n\n` +
+      `Amount: ${displayAmount} DRC\n\n` +
+      `Transaction:\n${tx}`
+    );
+
+    await loadDrcBalance();
+    await loadLockPosition();
+  } catch (error) {
+    console.error(error);
+
+    setStatus(
+      `Withdraw failed.\n${error?.message || error}`
+    );
+
+    await loadLockPosition();
+  }
+}
+
+async function claimBlood() {
+  try {
+    if (
+      !walletPublicKey ||
+      !program ||
+      !lockPositionPda
+    ) {
+      throw new Error("Connect your wallet first.");
+    }
+
+    const lock =
+      await program.account.lockPosition.fetch(
+        lockPositionPda
+      );
+
+    const bloodRaw =
+      BigInt(lock.bloodEarned.toString());
+
+    if (bloodRaw <= 0n) {
+      throw new Error(
+        "No BLOOD is currently available to claim."
+      );
+    }
+
+    const [bloodMintAuthority] =
+      PublicKey.findProgramAddressSync(
+        [
+          new TextEncoder().encode(
+            "blood_mint_authority"
+          ),
+        ],
+        program.programId
+      );
+
+    const tokenAccounts =
+      await connection.getTokenAccountsByOwner(
+        walletPublicKey,
+        { mint: BLOOD_MINT }
+      );
+
+    if (tokenAccounts.value.length === 0) {
+      throw new Error(
+        "No BLOOD token account found for this wallet."
+      );
+    }
+
+    const ownerBloodAccount =
+      tokenAccounts.value[0].pubkey;
+
+    claimButton.disabled = true;
+
+    const displayAmount =
+      formatTokenAmount(bloodRaw, 9);
+
+    setStatus(
+      `Claiming ${displayAmount} BLOOD...\n\n` +
+      `Approve the transaction in X1 Wallet.`
+    );
+
+    const tx = await program.methods
+      .claimBlood()
+      .accounts({
+        lockPosition: lockPositionPda,
+        bloodMint: BLOOD_MINT,
+        bloodMintAuthority,
+        ownerBloodAccount,
+        owner: walletPublicKey,
+        tokenProgram: TOKEN_PROGRAM_ID,
+      })
+      .rpc();
+
+    setStatus(
+      `BLOOD claimed successfully.\n\n` +
+      `Amount: ${displayAmount} BLOOD\n\n` +
+      `Transaction:\n${tx}`
+    );
+
+
+await loadBloodBalance();
+    await loadLockPosition();
+  } catch (error) {
+    console.error(error);
+
+    setStatus(
+      `Claim failed.\n${error?.message || error}`
+    );
+
+    await loadLockPosition();
+  }
+}
+
 
 async function createLock() {
   try {
@@ -552,3 +833,14 @@ lockButton.addEventListener(
 );
 
 setStatus("Ready. Connect your wallet.");
+
+
+withdrawButton.addEventListener(
+  "click",
+  withdrawDrc
+);
+
+claimButton.addEventListener(
+  "click",
+  claimBlood
+);
