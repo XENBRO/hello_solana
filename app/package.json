@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +17,8 @@
     "@anchor-lang/core": "^1.1.2",
     "@coral-xyz/anchor": "^0.32.1",
     "@solana/web3.js": "^1.98.4",
-    "express": "^5.2.1"
+    "buffer": "^6.0.3",
+    "express": "^5.2.1",
+    "vite": "^8.2.2"
   }
 }

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>DRC Lock → BLOOD</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+
+  <body>
+    <main class="app-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">X1 MAINNET</p>
+          <h1>DRC Lock → BLOOD</h1>
+          <p class="subtitle">
+            Lock DRC. Earn BLOOD. Withdraw after maturity.
+          </p>
+        </div>
+
+        <button id="connectWallet" class="primary-button">
+          Connect Wallet
+        </button>
+      </header>
+
+      <section class="status-grid">
+        <article class="card">
+          <span class="label">Wallet</span>
+          <strong id="walletAddress">Not connected</strong>
+        </article>
+
+        <article class="card">
+          <span class="label">DRC Balance</span>
+          <strong id="drcBalance">—</strong>
+        </article>
+
+        <article class="card">
+          <span class="label">BLOOD Balance</span>
+          <strong id="bloodBalance">—</strong>
+        </article>
+
+        <article class="card">
+          <span class="label">Locked DRC</span>
+          <strong id="lockedAmount">—</strong>
+        </article>
+      </section>
+
+      <section class="card action-card">
+        <h2>Lock DRC</h2>
+
+        <label for="lockTier">Lock duration</label>
+        <select id="lockTier">
+          <option value="2592000">30 days</option>
+          <option value="7776000">90 days</option>
+          <option value="15552000">180 days</option>
+          <option value="31536000">365 days</option>
+        </select>
+
+        <label for="depositAmount">DRC amount</label>
+        <input
+          id="depositAmount"
+          type="number"
+          min="0"
+          step="0.000000001"
+          placeholder="0.00"
+        />
+
+        <button id="lockButton" class="primary-button" disabled>
+          Create Lock
+        </button>
+      </section>
+
+      <section class="card position-card">
+        <h2>Your Position</h2>
+
+        <div class="position-row">
+          <span>Lock status</span>
+          <strong id="lockStatus">Not loaded</strong>
+        </div>
+
+        <div class="position-row">
+          <span>Unlock date</span>
+          <strong id="unlockDate">—</strong>
+        </div>
+
+        <div class="position-row">
+          <span>Claimable BLOOD</span>
+          <strong id="claimableBlood">—</strong>
+        </div>
+
+        <div class="button-row">
+          <button id="withdrawButton" disabled>
+            Withdraw DRC
+          </button>
+
+          <button id="claimButton" disabled>
+            Claim BLOOD
+          </button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Transaction Status</h2>
+        <pre id="statusLog">Ready.</pre>
+      </section>
+    </main>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
