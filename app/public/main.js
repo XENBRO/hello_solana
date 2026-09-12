@@ -10,6 +10,8 @@ import {
   SystemProgram,
 } from "@solana/web3.js";
 
+import idl from "./idl/hello_solana.json";
+
 const RPC_URL = "https://rpc.mainnet.x1.xyz";
 
 const PROGRAM_ID = new PublicKey(
@@ -117,15 +119,7 @@ function deriveVault(owner) {
 
 
 async function loadProgram() {
-  const response = await fetch(
-    "/idl/hello_solana.json"
-  );
-
-  if (!response.ok) {
-    throw new Error("Unable to load program IDL.");
-  }
-
-  const idl = await response.json();
+  
 
   const browserWallet = {
     publicKey: walletPublicKey,
