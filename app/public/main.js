@@ -351,7 +351,7 @@ async function connectWallet() {
       `Wallet connected.\n` +
       `${walletPublicKey.toString()}\n\n` +
       `DRC balance: ${drcBalance} DRC\n` +
-      `Lock PDA: ${lock.lockaddress}\n` +
+      `Lock PDA: ${lock.lockAddress}\n` +
       `Lock position: ${
         lock.lockExists
           ? "EXISTS"
