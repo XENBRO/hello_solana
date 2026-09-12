@@ -828,7 +828,19 @@ lockButton.addEventListener(
       return;
     }
 
-    await depositDrc();
+    const lock =
+  await program.account.lockPosition.fetch(
+    lockPositionPda
+  );
+
+if (BigInt(lock.amount.toString()) > 0n) {
+  setStatus(
+    "This position is already funded."
+  );
+  return;
+}
+
+await depositDrc();
   }
 );
 
