@@ -187,3 +187,8 @@ select:focus {
     padding-top: 28px;
   }
 }
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(35%);
+}
