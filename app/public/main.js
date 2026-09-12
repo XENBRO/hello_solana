@@ -10,6 +10,12 @@ import {
   SystemProgram,
 } from "@solana/web3.js";
 
+import {
+  getAssociatedTokenAddressSync,
+  createAssociatedTokenAccountInstruction,
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+} from "@solana/spl-token";
+
 import idl from "./idl/hello_solana.json";
 
 const RPC_URL = "https://rpc.mainnet.x1.xyz";
@@ -472,20 +478,32 @@ async function depositDrc() {
       throw new Error("DRC amount must be greater than zero.");
     }
 
-    const tokenAccounts =
-      await connection.getTokenAccountsByOwner(
-        walletPublicKey,
-        { mint: DRC_MINT }
-      );
+    const ownerBloodAccount =
+  getAssociatedTokenAddressSync(
+    BLOOD_MINT,
+    walletPublicKey,
+    false,
+    TOKEN_PROGRAM_ID,
+    ASSOCIATED_TOKEN_PROGRAM_ID
+  );
 
-    if (tokenAccounts.value.length === 0) {
-      throw new Error(
-        "No DRC token account found for this wallet."
-      );
-    }
+const ownerBloodAccountInfo =
+  await connection.getAccountInfo(ownerBloodAccount);
 
-    const ownerTokenAccount =
-      tokenAccounts.value[0].pubkey;
+const preInstructions = [];
+
+if (!ownerBloodAccountInfo) {
+  preInstructions.push(
+    createAssociatedTokenAccountInstruction(
+      walletPublicKey,
+      ownerBloodAccount,
+      walletPublicKey,
+      BLOOD_MINT,
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    )
+  );
+}
 
     lockButton.disabled = true;
 
@@ -504,6 +522,7 @@ async function depositDrc() {
         owner: walletPublicKey,
         tokenProgram: TOKEN_2022_PROGRAM_ID,
       })
+      .preInstructions(preInstructions)
       .rpc();
 
     setStatus(
