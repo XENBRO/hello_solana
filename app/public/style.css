@@ -219,3 +219,102 @@ button:disabled {
     border-radius: 16px;
   }
 }
+.hero {
+  padding: 8px 0;
+}
+
+.brand > div {
+  min-width: 0;
+}
+
+.subtitle {
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+.primary-button {
+  white-space: nowrap;
+}
+
+.position-row > * {
+  min-width: 0;
+}
+
+.position-row strong,
+.position-row span:last-child {
+  text-align: right;
+  word-break: break-word;
+}
+
+@media (max-width: 800px) {
+  .hero {
+    gap: 18px;
+  }
+
+  .primary-button {
+    width: 100%;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 11vw, 3rem);
+  }
+}
+
+@media (max-width: 500px) {
+  .app-shell {
+    width: min(100% - 20px, 1100px);
+    padding-top: 22px;
+    padding-bottom: 48px;
+  }
+
+  .card {
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  .brand {
+    width: 100%;
+    align-items: center;
+  }
+
+  .brand-logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+  }
+
+  .eyebrow {
+    margin-bottom: 6px;
+    font-size: 0.7rem;
+  }
+
+  h1 {
+    font-size: clamp(1.8rem, 10vw, 2.5rem);
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+  }
+
+  .position-row {
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px 0;
+  }
+
+  .position-row strong,
+  .position-row span:last-child {
+    text-align: left;
+  }
+
+  input,
+  select,
+  .primary-button,
+  .button-row button {
+    min-height: 48px;
+  }
+
+  #statusLog {
+    font-size: 0.9rem;
+  }
+}
