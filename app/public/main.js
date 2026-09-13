@@ -146,6 +146,10 @@ function detectWallet() {
     return window.x1;
   }
 
+  if (window.backpack?.solana) {
+    return window.backpack.solana;
+  }
+
   return null;
 }
 
@@ -183,18 +187,26 @@ async function loadProgram() {
   
 
   const browserWallet = {
-    publicKey: walletPublicKey,
+  publicKey: walletPublicKey,
 
-    signTransaction: async (transaction) => {
-      return walletProvider.signTransaction(transaction);
-    },
+  signTransaction: async (transaction) => {
+    return walletProvider.signTransaction(transaction);
+  },
 
-    signAllTransactions: async (transactions) => {
+  signAllTransactions: async (transactions) => {
+    if (walletProvider.signAllTransactions) {
       return walletProvider.signAllTransactions(
         transactions
       );
-    },
-  };
+    }
+
+    return Promise.all(
+      transactions.map((transaction) =>
+        walletProvider.signTransaction(transaction)
+      )
+    );
+  },
+};
 
   const provider = new anchor.AnchorProvider(
     connection,
@@ -384,11 +396,21 @@ async function connectWallet() {
     setStatus("Waiting for wallet approval...");
 
     const response =
-      await walletProvider.connect();
+  await walletProvider.connect();
 
-    walletPublicKey = new PublicKey(
-      response.publicKey.toString()
-    );
+const connectedPublicKey =
+  response?.publicKey ??
+  walletProvider.publicKey;
+
+if (!connectedPublicKey) {
+  throw new Error(
+    "Wallet connected but no public key was returned."
+  );
+}
+
+walletPublicKey = new PublicKey(
+  connectedPublicKey.toString()
+);
 
     walletAddressEl.textContent =
       walletPublicKey.toString();
