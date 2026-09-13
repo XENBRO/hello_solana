@@ -318,3 +318,103 @@ button:disabled {
     font-size: 0.9rem;
   }
 }
+.launch-info h3 {
+  margin: 28px 0 14px;
+}
+
+.launch-copy {
+  color: #bbb;
+  line-height: 1.6;
+}
+
+.reward-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.reward-tier {
+  padding: 16px;
+  border: 1px solid #2b2b2b;
+  border-radius: 12px;
+  background: #0b0b0b;
+}
+
+.reward-tier span {
+  display: block;
+  margin-bottom: 8px;
+  color: #888;
+}
+
+.reward-tier strong {
+  color: #ff4141;
+  font-size: 1.2rem;
+}
+
+.verify-list {
+  display: grid;
+  gap: 10px;
+}
+
+.verify-list div {
+  display: grid;
+  gap: 6px;
+}
+
+.verify-list span {
+  color: #888;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+}
+
+.verify-list code {
+  padding: 10px;
+  overflow-x: auto;
+  color: #ddd;
+  border-radius: 8px;
+  background: #050505;
+}
+
+.risk-notice {
+  margin-top: 24px;
+  padding: 16px;
+  border: 1px solid #4a1717;
+  border-radius: 12px;
+  background: rgba(90, 10, 10, 0.18);
+}
+
+.risk-notice strong {
+  color: #ff5a5a;
+}
+
+.risk-notice p {
+  margin-bottom: 0;
+  color: #bbb;
+  line-height: 1.6;
+}
+
+.site-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px 4px 0;
+  color: #777;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 700px) {
+  .reward-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .site-footer {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 420px) {
+  .reward-grid {
+    grid-template-columns: 1fr;
+  }
+}
