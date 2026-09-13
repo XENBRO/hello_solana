@@ -69,6 +69,61 @@ function setStatus(message) {
   statusLog.textContent = message;
 }
 
+function getFriendlyError(error) {
+  const message =
+    getFriendlyError(error)?.toString?.() ||
+    "Unknown error.";
+
+  const lower = message.toLowerCase();
+
+  if (
+    lower.includes("user rejected") ||
+    lower.includes("rejected the request") ||
+    lower.includes("declined") ||
+    lower.includes("4001")
+  ) {
+    return "Transaction cancelled in wallet.";
+  }
+
+  if (
+    lower.includes("locknotexpired") ||
+    lower.includes("lock not expired")
+  ) {
+    return "This DRC position is still locked. Withdraw is available after maturity.";
+  }
+
+  if (
+    lower.includes("nobloodtoclaim") ||
+    lower.includes("no blood is currently available")
+  ) {
+    return "No BLOOD is currently available to claim.";
+  }
+
+  if (
+    lower.includes("insufficient funds") ||
+    lower.includes("insufficient lamports")
+  ) {
+    return "Not enough native X1 balance to pay the network fee.";
+  }
+
+  if (
+    lower.includes("failed to fetch") ||
+    lower.includes("networkerror") ||
+    lower.includes("fetch failed")
+  ) {
+    return "Unable to reach X1 Mainnet. Please try again.";
+  }
+
+  if (
+    lower.includes("blockhash not found") ||
+    lower.includes("transaction expired")
+  ) {
+    return "The transaction expired before confirmation. Please try again.";
+  }
+
+  return message;
+}
+
 function shortenAddress(address) {
   return `${address.slice(0, 4)}...${address.slice(-4)}`;
 }
@@ -370,7 +425,7 @@ async function connectWallet() {
 
     setStatus(
       `Connection error.\n${
-        error?.message || error
+        getFriendlyError(error)
       }`
     );
   }
@@ -442,7 +497,7 @@ async function createVault() {
 
     setStatus(
       `Create vault failed.\n${
-        error?.message || error
+        getFriendlyError(error)
       }`
     );
   }
@@ -540,7 +595,7 @@ if (!ownerBloodAccountInfo) {
     lockButton.disabled = false;
 
     setStatus(
-      `Deposit failed.\n${error?.message || error}`
+      `Deposit failed.\n${getFriendlyError(error)}`
     );
   }
 }
@@ -631,7 +686,7 @@ async function withdrawDrc() {
     console.error(error);
 
     setStatus(
-      `Withdraw failed.\n${error?.message || error}`
+      `Withdraw failed.\n${getFriendlyError(error)}`
     );
 
     await loadLockPosition();
@@ -722,7 +777,7 @@ await loadBloodBalance();
     console.error(error);
 
     setStatus(
-      `Claim failed.\n${error?.message || error}`
+      `Claim failed.\n${getFriendlyError(error)}`
     );
 
     await loadLockPosition();
@@ -806,7 +861,7 @@ async function createLock() {
 
     setStatus(
       `Create lock failed.\n${
-        error?.message || error
+        getFriendlyError(error)
       }`
     );
   }
