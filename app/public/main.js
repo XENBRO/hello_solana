@@ -555,32 +555,34 @@ async function depositDrc() {
       throw new Error("DRC amount must be greater than zero.");
     }
 
-    const ownerBloodAccount =
-  getAssociatedTokenAddressSync(
-    BLOOD_MINT,
+    
+
+const drcAccounts =
+  await connection.getParsedTokenAccountsByOwner(
     walletPublicKey,
-    false,
-    TOKEN_PROGRAM_ID,
-    ASSOCIATED_TOKEN_PROGRAM_ID
+    {
+      mint: DRC_MINT,
+    }
   );
 
-const ownerBloodAccountInfo =
-  await connection.getAccountInfo(ownerBloodAccount);
+const sourceAccount =
+  drcAccounts.value.find(({ account }) => {
+    const rawAmount =
+      BigInt(
+        account.data.parsed.info.tokenAmount.amount
+      );
 
-const preInstructions = [];
+    return rawAmount >= amountRaw;
+  });
 
-if (!ownerBloodAccountInfo) {
-  preInstructions.push(
-    createAssociatedTokenAccountInstruction(
-      walletPublicKey,
-      ownerBloodAccount,
-      walletPublicKey,
-      BLOOD_MINT,
-      TOKEN_PROGRAM_ID,
-      ASSOCIATED_TOKEN_PROGRAM_ID
-    )
+if (!sourceAccount) {
+  throw new Error(
+    "No DRC token account has enough balance for this deposit."
   );
 }
+
+const ownerTokenAccount =
+  sourceAccount.pubkey;
 
     lockButton.disabled = true;
 
@@ -599,7 +601,6 @@ if (!ownerBloodAccountInfo) {
         owner: walletPublicKey,
         tokenProgram: TOKEN_2022_PROGRAM_ID,
       })
-      .preInstructions(preInstructions)
       .rpc();
 
     setStatus(
