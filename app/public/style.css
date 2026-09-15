@@ -418,3 +418,21 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 }
+.amount-input-row {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.amount-input-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.max-button {
+  width: auto;
+  min-width: 64px;
+  padding: 0 16px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}

@@ -44,6 +44,8 @@ const lockTier = document.getElementById("lockTier");
 
 const depositAmountEl = document.getElementById("depositAmount");
 
+const maxButton = document.getElementById("maxButton");
+
 const bloodBalanceEl = document.getElementById("bloodBalance");
 const lockedAmountEl = document.getElementById("lockedAmount");
 const unlockDateEl = document.getElementById("unlockDate");
@@ -244,7 +246,10 @@ async function loadDrcBalance() {
 
   drcBalanceEl.textContent = `${formatted} DRC`;
 
+  maxButton.disabled = totalRaw === 0n;
+
   return formatted;
+
 }
 
 async function loadBloodBalance() {
@@ -904,6 +909,8 @@ lockButton.addEventListener(
         lockPositionPda
       );
 
+
+
     if (!lockInfo) {
       await createLock();
       return;
@@ -934,7 +941,29 @@ if (BigInt(lock.amount.toString()) > 0n) {
 await depositDrc();
   }
 );
+maxButton.addEventListener("click", async () => {
+  try {
+    if (!walletPublicKey) {
+      throw new Error("Connect your wallet first.");
+    }
 
+    const maxAmount = await loadDrcBalance();
+
+    if (maxAmount === "0") {
+      throw new Error("No DRC available to lock.");
+    }
+
+    depositAmountEl.value = maxAmount;
+  } catch (error) {
+    console.error(error);
+
+    setStatus(
+      `Unable to load MAX DRC amount.\n${
+        getFriendlyError(error)
+      }`
+    );
+  }
+});
 setStatus("Ready. Connect your wallet.");
 
 

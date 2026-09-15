@@ -71,13 +71,24 @@
         </select>
 
         <label for="depositAmount">DRC amount</label>
-        <input
-          id="depositAmount"
-          type="number"
-          min="0"
-          step="0.000000001"
-          placeholder="0.00"
-        />
+        <div class="amount-input-row">
+  <input
+    id="depositAmount"
+    type="number"
+    min="0"
+    step="0.000000001"
+    placeholder="0.00"
+  />
+
+  <button
+    id="maxButton"
+    type="button"
+    class="max-button"
+    disabled
+  >
+    MAX
+  </button>
+</div>
 
         <button id="lockButton" class="primary-button" disabled>
           Create Lock
