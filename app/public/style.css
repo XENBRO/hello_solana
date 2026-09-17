@@ -436,3 +436,147 @@ button:disabled {
   font-weight: 700;
   letter-spacing: 0.05em;
 }
+/* Bloodlines navigation */
+
+.vault-nav {
+  display: flex;
+  gap: 10px;
+  margin: 22px 0 16px;
+}
+
+.vault-nav-button {
+  width: auto;
+  padding: 10px 18px;
+  border: 1px solid #555;
+  border-radius: 8px;
+  background: #151515;
+  color: #aaa;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+
+.vault-nav-button:hover {
+  border-color: #8a2020;
+  color: #fff;
+}
+
+.vault-nav-button.active {
+  border-color: #b32626;
+  background: #741818;
+  color: #fff;
+}
+
+
+/* Bloodline leaderboard */
+
+[hidden] {
+  display: none !important;
+}
+
+.bloodlines-view {
+  margin-top: 8px;
+}
+
+.bloodlines-header {
+  margin-bottom: 22px;
+}
+
+.bloodlines-header h2 {
+  margin: 6px 0 8px;
+}
+
+.bloodlines-subtitle {
+  margin: 0;
+  color: #aaa;
+}
+
+.leaderboard-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.leaderboard-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.leaderboard-table {
+  width: 100%;
+  min-width: 820px;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+  padding: 16px 18px;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid #292929;
+}
+
+.leaderboard-table th {
+  color: #999;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.leaderboard-table td {
+  color: #eee;
+}
+
+.leaderboard-table th:nth-child(1),
+.leaderboard-table td:nth-child(1) {
+  width: 70px;
+}
+
+.leaderboard-table th:nth-child(2),
+.leaderboard-table td:nth-child(2) {
+  width: 150px;
+}
+
+.leaderboard-table th:nth-child(3),
+.leaderboard-table td:nth-child(3) {
+  min-width: 220px;
+}
+
+.leaderboard-table th:nth-child(4),
+.leaderboard-table td:nth-child(4) {
+  min-width: 150px;
+}
+
+.leaderboard-table th:nth-child(5),
+.leaderboard-table td:nth-child(5) {
+  min-width: 170px;
+}
+
+.leaderboard-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.leaderboard-table tbody tr:hover {
+  background: rgba(120, 20, 20, 0.12);
+}
+
+.leaderboard-empty {
+  padding: 32px !important;
+  text-align: center !important;
+  color: #888 !important;
+}
+
+@media (max-width: 700px) {
+  .vault-nav {
+    width: 100%;
+  }
+
+  .vault-nav-button {
+    flex: 1;
+  }
+
+  .leaderboard-table th,
+  .leaderboard-table td {
+    padding: 13px 14px;
+  }
+}

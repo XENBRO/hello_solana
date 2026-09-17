@@ -35,8 +35,27 @@
         <button id="connectWallet" class="primary-button">
           Connect Wallet
         </button>
+      
       </header>
 
+      <nav class="vault-nav">
+        <button
+          id="vaultTab"
+          class="vault-nav-button active"
+          type="button"
+        >
+          VAULT
+        </button>
+
+        <button
+          id="bloodlinesTab"
+          class="vault-nav-button"
+          type="button"
+        >
+          BLOODLINES
+        </button>
+      </nav>
+      <div id="vaultView">
       <section class="status-grid">
         <article class="card">
           <span class="label">Wallet</span>
@@ -188,7 +207,46 @@
           </p>
         </div>
       </section>
+      </div>
+      <section
+        id="bloodlinesView"
+        class="bloodlines-view"
+        hidden
+      >
+        <div class="bloodlines-header">
+          <div>
+            <p class="eyebrow">DRACULA VAULT</p>
+            <h2>BLOODLINE LEADERBOARD</h2>
+            <p class="bloodlines-subtitle">
+              The strongest bloodlines on X1 Mainnet.
+            </p>
+          </div>
+        </div>
 
+        <div class="card leaderboard-card">
+          <div class="leaderboard-table-wrap">
+            <table class="leaderboard-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Wallet</th>
+                  <th>DRC Locked</th>
+                  <th>Lock Duration</th>
+                  <th>Projected BLOOD</th>
+                </tr>
+              </thead>
+
+              <tbody id="leaderboardBody">
+                <tr>
+                  <td colspan="5" class="leaderboard-empty">
+                    Connect to X1 Mainnet to awaken the bloodlines.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
       <footer class="site-footer">
         <strong>DRACULA VAULT · X1 MAINNET</strong>
         <span>Lock DRC. Earn BLOOD.</span>

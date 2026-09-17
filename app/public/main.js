@@ -53,6 +53,20 @@ const claimableBloodEl = document.getElementById("claimableBlood");
 const withdrawButton = document.getElementById("withdrawButton");
 const claimButton = document.getElementById("claimButton");
 
+const vaultTab =
+  document.getElementById("vaultTab");
+
+const bloodlinesTab =
+  document.getElementById("bloodlinesTab");
+
+const vaultView =
+  document.getElementById("vaultView");
+
+const bloodlinesView =
+  document.getElementById("bloodlinesView");
+
+const leaderboardBody =
+  document.getElementById("leaderboardBody");
 const BLOOD_MINT = new PublicKey(
   "WYQdHQWeLvXSr1L8d65BdnomKM68tKxSgLM6ifAFo94"
 );
@@ -280,7 +294,140 @@ async function loadBloodBalance() {
 
   return formatted;
 }
+async function loadBloodlineLeaderboard() {
+  if (!program) {
+    throw new Error("Connect your wallet first.");
+  }
 
+  leaderboardBody.innerHTML = `
+    <tr>
+      <td colspan="5" class="leaderboard-empty">
+        Awakening the bloodlines...
+      </td>
+    </tr>
+  `;
+
+  try {
+    const positions =
+      await program.account.lockPosition.all();
+
+    const fundedPositions = positions
+      .filter(({ account }) => {
+        return BigInt(account.amount.toString()) > 0n;
+      })
+      .sort((a, b) => {
+        const amountA =
+          BigInt(a.account.amount.toString());
+
+        const amountB =
+          BigInt(b.account.amount.toString());
+
+        if (amountA === amountB) {
+          return 0;
+        }
+
+        return amountA > amountB ? -1 : 1;
+      });
+
+    if (fundedPositions.length === 0) {
+      leaderboardBody.innerHTML = `
+        <tr>
+          <td colspan="5" class="leaderboard-empty">
+            No funded bloodlines found.
+          </td>
+        </tr>
+      `;
+
+      return;
+    }
+
+    leaderboardBody.innerHTML =
+      fundedPositions
+        .map(({ account }, index) => {
+          const owner =
+            account.owner.toString();
+
+          const shortOwner =
+            `${owner.slice(0, 4)}...${owner.slice(-4)}`;
+
+          const amountRaw =
+  BigInt(account.amount.toString());
+
+const amount =
+  formatTokenAmount(
+    amountRaw,
+    9
+  );
+
+const lockStart =
+  Number(account.lockStart.toString());
+
+const unlockTime =
+  Number(account.unlockTime.toString());
+
+const durationSeconds =
+  unlockTime - lockStart;
+
+const durationDays =
+  Math.round(
+    durationSeconds / 86400
+  );
+
+const multiplierBps = {
+  30: 10000n,
+  90: 12500n,
+  180: 15000n,
+  365: 20000n,
+}[durationDays];
+
+const projectedBloodRaw =
+  multiplierBps
+    ? (
+        amountRaw *
+        BigInt(durationDays) *
+        250n *
+        multiplierBps
+      ) /
+      1000000n /
+      10000n
+    : 0n;
+
+const blood =
+  formatTokenAmount(
+    projectedBloodRaw,
+    9
+  );
+
+          
+
+          return `
+            <tr>
+              <td>#${index + 1}</td>
+              <td>${shortOwner}</td>
+              <td>${amount} DRC</td>
+              <td>${durationDays} days</td>
+              <td>${blood} BLOOD</td>
+            </tr>
+          `;
+        })
+        .join("");
+  } catch (error) {
+    console.error(
+      "Bloodline leaderboard error:",
+      error
+    );
+
+    leaderboardBody.innerHTML = `
+      <tr>
+        <td colspan="5" class="leaderboard-empty">
+          Unable to load the bloodlines.
+        </td>
+      </tr>
+    `;
+
+    throw error;
+  }
+}
 async function loadLockPosition() {
   lockPositionPda =
     deriveLockPosition(walletPublicKey);
@@ -964,6 +1111,30 @@ maxButton.addEventListener("click", async () => {
     );
   }
 });
+vaultTab.addEventListener("click", () => {
+  vaultView.hidden = false;
+  bloodlinesView.hidden = true;
+
+  vaultTab.classList.add("active");
+  bloodlinesTab.classList.remove("active");
+});
+
+bloodlinesTab.addEventListener(
+  "click",
+  async () => {
+    vaultView.hidden = true;
+    bloodlinesView.hidden = false;
+
+    bloodlinesTab.classList.add("active");
+    vaultTab.classList.remove("active");
+
+    try {
+      await loadBloodlineLeaderboard();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+);
 setStatus("Ready. Connect your wallet.");
 
 
