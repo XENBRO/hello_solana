@@ -581,6 +581,26 @@ button:disabled {
   }
 }
 
+/* Blood Hunt table containment */
+.blood-hunt-view {
+  min-width: 0;
+}
+
+.immortal-leaderboard {
+  min-width: 0;
+}
+
+.immortal-leaderboard .leaderboard-wrap {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.immortal-leaderboard .leaderboard-table {
+  min-width: 620px;
+}
+
 /* ===== HALLOWEEN BLOOD HUNT ===== */
 
 .blood-hunt-view {
