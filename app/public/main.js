@@ -396,6 +396,14 @@ async function loadBloodlineLeaderboard() {
           const shortOwner =
             `${owner.slice(0, 4)}...${owner.slice(-4)}`;
 
+          const isGenesisImmortal =
+            GENESIS_IMMORTAL_WALLETS.has(owner);
+
+          const walletDisplay =
+            isGenesisImmortal
+              ? `${shortOwner} 👑 GENESIS`
+              : shortOwner;
+
           const amountRaw =
   BigInt(account.amount.toString());
 
@@ -449,7 +457,7 @@ const blood =
           return `
             <tr>
               <td>#${index + 1}</td>
-              <td>${shortOwner}</td>
+              <td>${walletDisplay}</td>
               <td>${amount} DRC</td>
               <td>${durationDays} days</td>
               <td>${blood} BLOOD</td>
