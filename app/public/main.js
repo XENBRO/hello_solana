@@ -59,17 +59,37 @@ const vaultTab =
 const bloodlinesTab =
   document.getElementById("bloodlinesTab");
 
+const bloodHuntTab =
+  document.getElementById("bloodHuntTab");
+
 const vaultView =
   document.getElementById("vaultView");
 
 const bloodlinesView =
   document.getElementById("bloodlinesView");
 
+const bloodHuntView =
+  document.getElementById("bloodHuntView");
+
 const leaderboardBody =
   document.getElementById("leaderboardBody");
 const BLOOD_MINT = new PublicKey(
   "WYQdHQWeLvXSr1L8d65BdnomKM68tKxSgLM6ifAFo94"
 );
+
+const GENESIS_IMMORTAL_WALLETS = new Set([
+  "9MEiLuNSvtCNt9QD8Gp6KCdkCgqQjuPLVoMaTUMwTjtQ",
+  "9qymDNeM1LJyX2bigx4TyMfjnX4VusGypqkeSMpKjX7x",
+  "13xP5SAZzoekL8v9LgmYqzKEXtJtyRwjSDH1BEH3LH2F",
+  "2HaBh9WmAKwnH59mQbftt8MCpA4AqY8XPqBKBYZTCjo4",
+  "B7pKynzSGCevkEscwkAVWnvYW1mGo1xBHHm8njZrxCwj",
+  "ADRBisAFnvn4YT16BuU8Uprmq86fPmYwCrFwNeGXzx34",
+  "BSfMne7pJKauQGnqFayjRfwZ85FAVZXCBPWbRs9Puv45",
+  "Giz3FQFRNoihsQNWRJSyJX1HKF9pRB9VQbNS6xQALPSp",
+  "FGndhyrUtp9cpNKgHHbBxpCGN3pJ7mhhzST7pXxdKmTR",
+  "HM2Htd2Ubc5e4eQm4GZrfg23LbJBqvpzWzkxm3PuVAiG",
+  "AiPgc3sqv2WVA4BZpbswNVD4JRgNZMxMJBd1NbX18ssB",
+]);
 
 const TOKEN_PROGRAM_ID = new PublicKey(
   "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
@@ -87,7 +107,8 @@ function setStatus(message) {
 
 function getFriendlyError(error) {
   const message =
-    getFriendlyError(error)?.toString?.() ||
+    error?.message?.toString?.() ||
+    error?.toString?.() ||
     "Unknown error.";
 
   const lower = message.toLowerCase();
@@ -294,6 +315,31 @@ async function loadBloodBalance() {
 
   return formatted;
 }
+function updateBloodHuntCountdown() {
+  const huntEnd =
+    new Date("2026-11-01T00:00:00-05:00");
+
+  const now = new Date();
+  const remaining = huntEnd - now;
+
+  const daysRemaining =
+    remaining > 0
+      ? Math.ceil(
+          remaining / (1000 * 60 * 60 * 24)
+        )
+      : 0;
+
+  const huntDays =
+    document.getElementById("huntDays");
+
+  if (huntDays) {
+    huntDays.textContent =
+      daysRemaining.toString();
+  }
+}
+
+updateBloodHuntCountdown();
+
 async function loadBloodlineLeaderboard() {
   if (!program) {
     throw new Error("Connect your wallet first.");
@@ -428,6 +474,268 @@ const blood =
     throw error;
   }
 }
+async function loadBloodHunt() {
+  if (!program) {
+    throw new Error("Connect your wallet first.");
+  }
+
+  const positions =
+    await program.account.lockPosition.all();
+
+  const fundedPositions =
+    positions.filter(({ account }) => {
+      return BigInt(
+        account.amount.toString()
+      ) > 0n;
+    });
+
+  let totalDrcRaw = 0n;
+  let totalProjectedBloodRaw = 0n;
+
+  for (const { account } of fundedPositions) {
+    const amountRaw =
+      BigInt(account.amount.toString());
+
+    const lockStart =
+      Number(account.lockStart.toString());
+
+    const unlockTime =
+      Number(account.unlockTime.toString());
+
+    const durationDays =
+      Math.round(
+        (unlockTime - lockStart) / 86400
+      );
+
+    const multiplierBps = {
+      30: 10000n,
+      90: 12500n,
+      180: 15000n,
+      365: 20000n,
+    }[durationDays];
+
+    const projectedBloodRaw =
+      multiplierBps
+        ? (
+            amountRaw *
+            BigInt(durationDays) *
+            250n *
+            multiplierBps
+          ) /
+          1000000n /
+          10000n
+        : 0n;
+
+    totalDrcRaw += amountRaw;
+    totalProjectedBloodRaw +=
+      projectedBloodRaw;
+  }
+
+  const participantsEl =
+    document.getElementById(
+      "huntParticipants"
+    );
+
+  const drcLockedEl =
+    document.getElementById(
+      "huntDrcLocked"
+    );
+
+  const projectedBloodEl =
+    document.getElementById(
+      "huntProjectedBlood"
+    );
+
+  participantsEl.textContent =
+    fundedPositions.length.toString();
+
+  const formattedTotalDrc =
+    Number(
+      formatTokenAmount(totalDrcRaw, 9)
+    ).toLocaleString("en-US", {
+      maximumFractionDigits: 3,
+    });
+
+  const formattedProjectedBlood =
+    Number(
+      formatTokenAmount(
+        totalProjectedBloodRaw,
+        9
+      )
+    ).toLocaleString("en-US", {
+      maximumFractionDigits: 3,
+    });
+
+  drcLockedEl.textContent =
+    `${formattedTotalDrc} DRC`;
+
+  projectedBloodEl.textContent =
+    `${formattedProjectedBlood} BLOOD`;
+
+  const immortalPositions =
+    fundedPositions
+      .filter(({ account }) => {
+        const lockStart =
+          Number(account.lockStart.toString());
+
+        const unlockTime =
+          Number(account.unlockTime.toString());
+
+        const durationDays =
+          Math.round(
+            (unlockTime - lockStart) / 86400
+          );
+
+        return durationDays === 365;
+      })
+      .sort((a, b) => {
+        const amountA =
+          BigInt(a.account.amount.toString());
+
+        const amountB =
+          BigInt(b.account.amount.toString());
+
+        if (amountA === amountB) {
+          return 0;
+        }
+
+        return amountA > amountB ? -1 : 1;
+      });
+
+  const immortalCount =
+    document.getElementById("immortalCount");
+
+  const immortalLeaderboardBody =
+    document.getElementById(
+      "immortalLeaderboardBody"
+    );
+
+  immortalCount.textContent =
+    immortalPositions.length.toString();
+
+  if (immortalPositions.length === 0) {
+    immortalLeaderboardBody.innerHTML = `
+      <tr>
+        <td
+          colspan="4"
+          class="leaderboard-empty"
+        >
+          No 365-day Immortals yet.
+        </td>
+      </tr>
+    `;
+  } else {
+    immortalLeaderboardBody.innerHTML =
+      immortalPositions
+        .map(({ account }, index) => {
+          const owner =
+            account.owner.toString();
+
+          const shortOwner =
+            `${owner.slice(0, 4)}...${owner.slice(-4)}`;
+
+          const amountRaw =
+            BigInt(account.amount.toString());
+
+          const amount =
+            Number(
+              formatTokenAmount(
+                amountRaw,
+                9
+              )
+            ).toLocaleString("en-US", {
+              maximumFractionDigits: 3,
+            });
+
+          return `
+            <tr>
+              <td>#${index + 1}</td>
+              <td>${shortOwner}</td>
+              <td>${amount} DRC</td>
+              <td>IMMORTAL 🩸</td>
+            </tr>
+          `;
+        })
+        .join("");
+  }
+
+  const walletPosition =
+    fundedPositions.find(({ account }) => {
+      return (
+        account.owner.toString() ===
+        walletPublicKey.toString()
+      );
+    });
+
+  const statusTitle =
+    document.getElementById(
+      "huntStatusTitle"
+    );
+
+  const statusText =
+    document.getElementById(
+      "huntStatusText"
+    );
+
+  if (walletPosition) {
+    const amountRaw =
+      BigInt(
+        walletPosition.account.amount.toString()
+      );
+
+    const lockStart =
+      Number(
+        walletPosition.account.lockStart.toString()
+      );
+
+    const unlockTime =
+      Number(
+        walletPosition.account.unlockTime.toString()
+      );
+
+    const durationDays =
+      Math.round(
+        (unlockTime - lockStart) / 86400
+      );
+
+    const isGenesisImmortal =
+      GENESIS_IMMORTAL_WALLETS.has(
+        walletPublicKey.toString()
+      );
+
+    const huntRank = isGenesisImmortal
+      ? "GENESIS IMMORTAL"
+      : ({
+          30: "INITIATE",
+          90: "BLOODBORN",
+          180: "ELDER VAMPIRE",
+          365: "IMMORTAL",
+        }[durationDays] ?? "HUNTER");
+
+    statusTitle.textContent =
+      isGenesisImmortal
+        ? "GENESIS IMMORTAL 👑🩸"
+        : `YOU'RE IN THE HUNT 🩸 · ${huntRank}`;
+
+    statusText.textContent =
+      isGenesisImmortal
+        ? `${formatTokenAmount(
+            amountRaw,
+            9
+          )} DRC locked for ${durationDays} days. Founding Bloodline · Grandfathered Sept. 17, 2026.`
+        : `${formatTokenAmount(
+            amountRaw,
+            9
+          )} DRC locked for ${durationDays} days. Blood Hunt Rank: ${huntRank}.`;
+  } else {
+    statusTitle.textContent =
+      "NOT YET IN THE HUNT";
+
+    statusText.textContent =
+      "Lock DRC in Dracula Vault to enter the Halloween Blood Hunt.";
+  }
+}
+
 async function loadLockPosition() {
   lockPositionPda =
     deriveLockPosition(walletPublicKey);
@@ -1114,9 +1422,11 @@ maxButton.addEventListener("click", async () => {
 vaultTab.addEventListener("click", () => {
   vaultView.hidden = false;
   bloodlinesView.hidden = true;
+  bloodHuntView.hidden = true;
 
   vaultTab.classList.add("active");
   bloodlinesTab.classList.remove("active");
+  bloodHuntTab.classList.remove("active");
 });
 
 bloodlinesTab.addEventListener(
@@ -1124,14 +1434,40 @@ bloodlinesTab.addEventListener(
   async () => {
     vaultView.hidden = true;
     bloodlinesView.hidden = false;
+    bloodHuntView.hidden = true;
 
     bloodlinesTab.classList.add("active");
     vaultTab.classList.remove("active");
+    bloodHuntTab.classList.remove("active");
 
     try {
       await loadBloodlineLeaderboard();
     } catch (error) {
       console.error(error);
+    }
+  }
+);
+
+bloodHuntTab.addEventListener(
+  "click",
+  async () => {
+    vaultView.hidden = true;
+    bloodlinesView.hidden = true;
+    bloodHuntView.hidden = false;
+
+    bloodHuntTab.classList.add("active");
+    vaultTab.classList.remove("active");
+    bloodlinesTab.classList.remove("active");
+
+    updateBloodHuntCountdown();
+
+    try {
+      await loadBloodHunt();
+    } catch (error) {
+      console.error(
+        "Blood Hunt error:",
+        error
+      );
     }
   }
 );

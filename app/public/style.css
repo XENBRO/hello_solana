@@ -580,3 +580,480 @@ button:disabled {
     padding: 13px 14px;
   }
 }
+
+/* ===== HALLOWEEN BLOOD HUNT ===== */
+
+.blood-hunt-view {
+  display: grid;
+  gap: 18px;
+}
+
+.blood-hunt-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 48px 28px;
+  text-align: center;
+  border: 1px solid #4a1515;
+  border-radius: 18px;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(180, 20, 20, 0.25),
+      transparent 55%
+    ),
+    linear-gradient(
+      180deg,
+      #180707 0%,
+      #0b0b0b 100%
+    );
+  box-shadow:
+    inset 0 0 60px rgba(150, 0, 0, 0.08),
+    0 0 30px rgba(120, 0, 0, 0.08);
+}
+
+.blood-hunt-hero h2 {
+  margin: 8px 0 10px;
+  font-size: clamp(2rem, 6vw, 4rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.blood-hunt-dates {
+  margin: 14px 0 0;
+  color: #ff4d4d;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.blood-hunt-tagline {
+  margin: 18px auto 0;
+  max-width: 600px;
+  color: #bbb;
+  font-size: 1.05rem;
+}
+
+.blood-hunt-countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 30px auto 24px;
+}
+
+.blood-hunt-countdown span {
+  font-size: clamp(4rem, 12vw, 7rem);
+  line-height: 0.85;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 0 28px rgba(220, 25, 25, 0.4);
+}
+
+.blood-hunt-countdown small {
+  margin-top: 14px;
+  color: #888;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.blood-hunt-existing {
+  display: inline-block;
+  margin: 0;
+  padding: 11px 18px;
+  border: 1px solid #6c1c1c;
+  border-radius: 999px;
+  background: rgba(130, 15, 15, 0.18);
+  color: #ff6868;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.blood-hunt-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.blood-hunt-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px;
+}
+
+.blood-hunt-stat span {
+  color: #888;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.blood-hunt-stat strong {
+  color: #fff;
+  font-size: clamp(1.3rem, 3vw, 2rem);
+  overflow-wrap: anywhere;
+}
+
+.blood-hunt-status,
+.blood-hunt-rewards {
+  padding: 26px;
+}
+
+.blood-hunt-status {
+  border-color: #4c1717;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(110, 10, 10, 0.16),
+      rgba(15, 15, 15, 0.95)
+    );
+}
+
+.blood-hunt-status h3,
+.blood-hunt-rewards h3 {
+  margin: 7px 0 10px;
+}
+
+.blood-hunt-status p:last-child,
+.blood-hunt-rewards p {
+  color: #aaa;
+}
+
+.blood-hunt-rewards .eyebrow {
+  color: #e34242;
+}
+
+.blood-hunt-details {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid #292929;
+  font-size: 0.85rem;
+  color: #777 !important;
+}
+
+@media (max-width: 700px) {
+  .blood-hunt-hero {
+    padding: 38px 18px;
+  }
+
+  .blood-hunt-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .blood-hunt-stat {
+    padding: 18px;
+  }
+
+  .blood-hunt-status,
+  .blood-hunt-rewards {
+    padding: 20px;
+  }
+}
+
+
+/* ===== BLOOD HUNT RANKS ===== */
+
+.blood-hunt-ranks {
+  padding: 26px;
+}
+
+.blood-hunt-ranks-header h3 {
+  margin: 7px 0 8px;
+}
+
+.blood-hunt-ranks-header > p:last-child {
+  margin: 0;
+  color: #888;
+}
+
+.blood-hunt-rank-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.blood-hunt-rank {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 125px;
+  padding: 18px;
+  border: 1px solid #303030;
+  border-radius: 12px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(80, 10, 10, 0.08),
+      rgba(10, 10, 10, 0.65)
+    );
+}
+
+.rank-duration {
+  color: #e34b4b;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.blood-hunt-rank strong {
+  margin-top: 12px;
+  color: #eee;
+  font-size: 1rem;
+}
+
+.blood-hunt-rank small {
+  margin-top: auto;
+  padding-top: 18px;
+  color: #666;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.blood-hunt-rank.immortal {
+  border-color: #8a2020;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(220, 25, 25, 0.2),
+      transparent 65%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(100, 10, 10, 0.2),
+      rgba(10, 10, 10, 0.85)
+    );
+  box-shadow:
+    inset 0 0 25px rgba(170, 0, 0, 0.08),
+    0 0 18px rgba(170, 0, 0, 0.08);
+}
+
+.blood-hunt-rank.immortal strong {
+  color: #ff5959;
+  text-shadow:
+    0 0 16px rgba(255, 40, 40, 0.3);
+}
+
+@media (max-width: 850px) {
+  .blood-hunt-rank-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .blood-hunt-ranks {
+    padding: 20px;
+  }
+
+  .blood-hunt-rank-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .blood-hunt-rank {
+    min-height: 105px;
+  }
+}
+
+
+/* ===== GENESIS IMMORTALS ===== */
+
+.genesis-immortals {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  padding: 26px;
+  border-color: #7a5420;
+  background:
+    radial-gradient(
+      circle at 0% 50%,
+      rgba(190, 130, 25, 0.15),
+      transparent 42%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(100, 12, 12, 0.18),
+      rgba(12, 12, 12, 0.96)
+    );
+  box-shadow:
+    inset 0 0 35px rgba(190, 125, 20, 0.05),
+    0 0 22px rgba(120, 20, 10, 0.06);
+}
+
+.genesis-immortals-badge {
+  flex: 0 0 110px;
+  width: 110px;
+  height: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #9a6a24;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle,
+      rgba(180, 115, 20, 0.22),
+      rgba(70, 10, 10, 0.2)
+    );
+  box-shadow:
+    0 0 25px rgba(180, 110, 20, 0.12);
+}
+
+.genesis-immortals-badge span {
+  font-size: 1.5rem;
+}
+
+.genesis-immortals-badge strong {
+  margin-top: 2px;
+  color: #f3c35d;
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.genesis-immortals-copy {
+  flex: 1;
+}
+
+.genesis-immortals-copy .eyebrow {
+  color: #f0b94b;
+}
+
+.genesis-immortals-copy h3 {
+  margin: 7px 0 10px;
+  color: #fff;
+}
+
+.genesis-immortals-copy > p:not(.eyebrow) {
+  color: #aaa;
+}
+
+.genesis-immortals-note {
+  margin-bottom: 0;
+  color: #c39a50 !important;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 600px) {
+  .genesis-immortals {
+    align-items: flex-start;
+    gap: 18px;
+    padding: 20px;
+  }
+
+  .genesis-immortals-badge {
+    flex-basis: 76px;
+    width: 76px;
+    height: 76px;
+  }
+
+  .genesis-immortals-badge span {
+    font-size: 1.1rem;
+  }
+
+  .genesis-immortals-badge strong {
+    font-size: 1.6rem;
+  }
+}
+
+
+/* ===== GENESIS IMMORTALS ===== */
+
+.genesis-immortals {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  padding: 26px;
+  border-color: #7a5420;
+  background:
+    radial-gradient(
+      circle at 0% 50%,
+      rgba(190, 130, 25, 0.15),
+      transparent 42%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(100, 12, 12, 0.18),
+      rgba(12, 12, 12, 0.96)
+    );
+  box-shadow:
+    inset 0 0 35px rgba(190, 125, 20, 0.05),
+    0 0 22px rgba(120, 20, 10, 0.06);
+}
+
+.genesis-immortals-badge {
+  flex: 0 0 110px;
+  width: 110px;
+  height: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #9a6a24;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle,
+      rgba(180, 115, 20, 0.22),
+      rgba(70, 10, 10, 0.2)
+    );
+  box-shadow:
+    0 0 25px rgba(180, 110, 20, 0.12);
+}
+
+.genesis-immortals-badge span {
+  font-size: 1.5rem;
+}
+
+.genesis-immortals-badge strong {
+  margin-top: 2px;
+  color: #f3c35d;
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.genesis-immortals-copy {
+  flex: 1;
+}
+
+.genesis-immortals-copy .eyebrow {
+  color: #f0b94b;
+}
+
+.genesis-immortals-copy h3 {
+  margin: 7px 0 10px;
+  color: #fff;
+}
+
+.genesis-immortals-copy > p:not(.eyebrow) {
+  color: #aaa;
+}
+
+.genesis-immortals-note {
+  margin-bottom: 0;
+  color: #c39a50 !important;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 600px) {
+  .genesis-immortals {
+    align-items: flex-start;
+    gap: 18px;
+    padding: 20px;
+  }
+
+  .genesis-immortals-badge {
+    flex-basis: 76px;
+    width: 76px;
+    height: 76px;
+  }
+
+  .genesis-immortals-badge span {
+    font-size: 1.1rem;
+  }
+
+  .genesis-immortals-badge strong {
+    font-size: 1.6rem;
+  }
+}
+

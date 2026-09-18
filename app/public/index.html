@@ -54,6 +54,14 @@
         >
           BLOODLINES
         </button>
+
+        <button
+          id="bloodHuntTab"
+          class="vault-nav-button"
+          type="button"
+        >
+          BLOOD HUNT
+        </button>
       </nav>
       <div id="vaultView">
       <section class="status-grid">
@@ -247,6 +255,180 @@
           </div>
         </div>
       </section>
+      <section
+        id="bloodHuntView"
+        class="blood-hunt-view"
+        hidden
+      >
+        <div class="blood-hunt-hero">
+          <p class="eyebrow">DRACULA VAULT PRESENTS</p>
+          <h2>THE HALLOWEEN BLOOD HUNT</h2>
+          <p class="blood-hunt-dates">
+            SEPT 17 — OCT 31, 2026
+          </p>
+
+          <p class="blood-hunt-tagline">
+            Lock DRC. Earn BLOOD. Establish your Bloodline.
+          </p>
+
+          <div class="blood-hunt-countdown">
+            <span id="huntDays">--</span>
+            <small>DAYS UNTIL THE HUNT ENDS</small>
+          </div>
+
+          <p class="blood-hunt-existing">
+            🩸 ALREADY LOCKED? YOU'RE ALREADY IN.
+          </p>
+        </div>
+
+        <div class="blood-hunt-stats">
+          <div class="card blood-hunt-stat">
+            <span>HUNTERS</span>
+            <strong id="huntParticipants">--</strong>
+          </div>
+
+          <div class="card blood-hunt-stat">
+            <span>DRC LOCKED</span>
+            <strong id="huntDrcLocked">--</strong>
+          </div>
+
+          <div class="card blood-hunt-stat">
+            <span>PROJECTED BLOOD</span>
+            <strong id="huntProjectedBlood">--</strong>
+          </div>
+        </div>
+
+        <div class="card blood-hunt-status">
+          <p class="eyebrow">YOUR BLOOD HUNT STATUS</p>
+          <h3 id="huntStatusTitle">CONNECT YOUR WALLET</h3>
+
+          <p id="huntStatusText">
+            Connect your wallet to discover your place in the Hunt.
+          </p>
+        </div>
+
+        <div class="card genesis-immortals">
+          <div class="genesis-immortals-badge">
+            <span>👑</span>
+            <strong>11</strong>
+          </div>
+
+          <div class="genesis-immortals-copy">
+            <p class="eyebrow">GENESIS IMMORTALS</p>
+            <h3>THE FOUNDING BLOODLINES</h3>
+
+            <p>
+              Eleven funded Bloodlines were present when the
+              Blood Hunt began on Sept. 17, 2026.
+            </p>
+
+            <p class="genesis-immortals-note">
+              These original hunters are permanently recognized
+              as Genesis Immortals, regardless of their original
+              lock duration.
+            </p>
+          </div>
+        </div>
+
+        <div class="card blood-hunt-ranks">
+          <div class="blood-hunt-ranks-header">
+            <p class="eyebrow">BLOOD HUNT RANKS</p>
+            <h3>HOW DEEP WILL YOU DESCEND?</h3>
+            <p>
+              Longer commitments unlock higher Blood Hunt status.
+            </p>
+          </div>
+
+          <div class="blood-hunt-rank-grid">
+            <div class="blood-hunt-rank">
+              <span class="rank-duration">30 DAYS</span>
+              <strong>INITIATE</strong>
+              <small>ENTER THE HUNT</small>
+            </div>
+
+            <div class="blood-hunt-rank">
+              <span class="rank-duration">90 DAYS</span>
+              <strong>BLOODBORN</strong>
+              <small>ANSWER THE CALL</small>
+            </div>
+
+            <div class="blood-hunt-rank">
+              <span class="rank-duration">180 DAYS</span>
+              <strong>ELDER VAMPIRE</strong>
+              <small>RISE IN POWER</small>
+            </div>
+
+            <div class="blood-hunt-rank immortal">
+              <span class="rank-duration">365 DAYS</span>
+              <strong>IMMORTAL</strong>
+              <small>QUALIFY FOR THE RAREST REWARD</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="card immortal-leaderboard">
+          <div class="immortal-leaderboard-header">
+            <div>
+              <p class="eyebrow">IMMORTAL LEADERBOARD</p>
+              <h3>THE 365-DAY BLOODLINES</h3>
+
+              <p>
+                Only active 365-day locks qualify. Immortals are
+                ranked by the amount of DRC locked.
+              </p>
+            </div>
+
+            <div class="immortal-count">
+              <strong id="immortalCount">--</strong>
+              <span>IMMORTALS</span>
+            </div>
+          </div>
+
+          <div class="leaderboard-wrap">
+            <table class="leaderboard-table immortal-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Wallet</th>
+                  <th>DRC Locked</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+
+              <tbody id="immortalLeaderboardBody">
+                <tr>
+                  <td colspan="4" class="leaderboard-empty">
+                    Awakening the Immortals...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="immortal-note">
+            IMMORTAL status grants eligibility for the Blood
+            Hunt's rarest Halloween reward. Final reward quantity
+            and snapshot rules will be announced before rewards
+            are awarded.
+          </p>
+        </div>
+
+        <div class="card blood-hunt-rewards">
+          <p class="eyebrow">HALLOWEEN REWARDS</p>
+          <h3>THE HUNT HAS ONLY JUST BEGUN.</h3>
+
+          <p>
+            Exclusive Dracula Vault Halloween rewards and
+            Bloodline collectibles are coming.
+          </p>
+
+          <p class="blood-hunt-details">
+            Final reward mechanics and eligibility details
+            will be announced before rewards are awarded.
+          </p>
+        </div>
+      </section>
+
       <footer class="site-footer">
         <strong>DRACULA VAULT · X1 MAINNET</strong>
         <span>Lock DRC. Earn BLOOD.</span>
