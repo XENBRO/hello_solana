@@ -595,11 +595,17 @@ async function loadBloodHunt() {
         const amountB =
           BigInt(b.account.amount.toString());
 
-        if (amountA === amountB) {
-          return 0;
+        if (amountA !== amountB) {
+          return amountA > amountB ? -1 : 1;
         }
 
-        return amountA > amountB ? -1 : 1;
+        const lockStartA =
+          Number(a.account.lockStart.toString());
+
+        const lockStartB =
+          Number(b.account.lockStart.toString());
+
+        return lockStartA - lockStartB;
       });
 
   const immortalCount =
@@ -652,7 +658,11 @@ async function loadBloodHunt() {
               <td>#${index + 1}</td>
               <td>${shortOwner}</td>
               <td>${amount} DRC</td>
-              <td>IMMORTAL 🩸</td>
+              <td>
+                ${index === 0
+                  ? "👑 CROWN LEADER"
+                  : "IMMORTAL 🩸"}
+              </td>
             </tr>
           `;
         })
